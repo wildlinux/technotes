@@ -2,9 +2,57 @@
 - 利用可微编程进行优化（收敛）
 - 利用反向传播增加深度及收敛
 
-# 1. Courera Machine-learning
+<h1> 1. Courera Machine-learning </ha>
+<!-- TOC -->
 
-## 1.1. Week
+- [1. Week_Introduction](#1-weekintroduction)
+- [2. Week_Logistic Regression](#2-weeklogistic-regression)
+    - [2.1. Advanced Optimizaion](#21-advanced-optimizaion)
+        - [2.1.1. Solving the problem of Overfitting](#211-solving-the-problem-of-overfitting)
+    - [2.2. ex](#22-ex)
+- [3. Week_Neural Networks: Representation](#3-weekneural-networks-representation)
+    - [3.1. max (x)](#31-max-x)
+    - [3.2. find](#32-find)
+- [4. Week_Neural Networks: Learning](#4-weekneural-networks-learning)
+- [5. Week_Advice for Applying Machine Learning](#5-weekadvice-for-applying-machine-learning)
+    - [5.1. Model Selection](#51-model-selection)
+    - [5.2. Bias vs Variance](#52-bias-vs-variance)
+    - [5.3. Choose Regulariztion](#53-choose-regulariztion)
+    - [5.4. Learning Curve](#54-learning-curve)
+    - [5.5. Summary: What to do to improve performance](#55-summary-what-to-do-to-improve-performance)
+    - [5.6. NN](#56-nn)
+    - [- large NN](#large-nn)
+    - [5.7. Eror Analysis](#57-eror-analysis)
+    - [5.8. Using Large Data Set](#58-using-large-data-set)
+- [6. Week_Support Vector Machine, SVM](#6-weeksupport-vector-machine-svm)
+    - [6.1. Support Vector Machine, SVM](#61-support-vector-machine-svm)
+    - [6.2. Math behind SVM](#62-math-behind-svm)
+    - [6.3. Kernels](#63-kernels)
+    - [6.4. Support Vector Machines](#64-support-vector-machines)
+    - [6.5. Excise](#65-excise)
+- [7. Week_](#7-week)
+    - [7.1. Unsupervied Learning](#71-unsupervied-learning)
+    - [7.2. Clustering: K-Means Alogrism](#72-clustering-k-means-alogrism)
+        - [7.2.1. Optimization Objectives](#721-optimization-objectives)
+    - [7.3. Dimensionality Reduction](#73-dimensionality-reduction)
+    - [7.4. PCA](#74-pca)
+        - [7.4.1. mean normalization](#741-mean-normalization)
+        - [7.4.2. scale](#742-scale)
+        - [7.4.3. how to get u](#743-how-to-get-u)
+        - [7.4.4. how to choose k](#744-how-to-choose-k)
+        - [7.4.5. Advice for applying PCA](#745-advice-for-applying-pca)
+- [8. Week_Anomaly Detection](#8-weekanomaly-detection)
+    - [Density Estimation](#density-estimation)
+        - [Problem Motivation](#problem-motivation)
+        - [Gaussian Distrubution](#gaussian-distrubution)
+        - [Algrithm : Density estimation](#algrithm-density-estimation)
+    - [Building an Anomaly Detection System](#building-an-anomaly-detection-system)
+    - [Multivariate Gaussian Distribution](#multivariate-gaussian-distribution)
+    - [Predicting Movie Ratings](#predicting-movie-ratings)
+    - [Collaborative Filtering](#collaborative-filtering)
+
+<!-- /TOC -->
+# 1. Week_Introduction
 
 - Supervised Learning: give machine a labled dataset to find the relationship between the data and the labelss
 	- Regression
@@ -18,9 +66,9 @@
 	- Clustering（聚合） and Cocktail Party Algorithm(分解)
 
 
-## 1.2. Week
+# 2. Week_Logistic Regression
 
-### 1.2.1. Advanced Optimizaion
+## 2.1. Advanced Optimizaion
 
 根据前面学过的内容，一般的梯度下降需要我们自己选合适的alpha，选定迭代次数，收敛的结果还不一定保证到最优。
 Octave提供了一些使用优化的方法来达到theta的快速收敛。
@@ -28,7 +76,7 @@ Octave提供了一些使用优化的方法来达到theta的快速收敛。
 - 如每次迭代使用不的alpha...具体的实现见课程了
 - 我们需要将待定的J(theta)，及J(theta)对theta_i的偏微分告诉优化算法，其他的就由优化算法自己处理了。
 
-#### 1.2.1.1. Solving the problem of Overfitting
+### 2.1.1. Solving the problem of Overfitting
 
 - Overfitting
 	- underfit
@@ -44,14 +92,14 @@ Octave提供了一些使用优化的方法来达到theta的快速收敛。
 		- to keep the theta as small as possible
 		- too small may elimate the effect of (thetai x Xi) 
 
-### 1.2.2. ex
+## 2.2. ex
 
 - 小心 X(1+2)不会解释为乘法，而是引用X中的元素
 - 注意 ./ 与 / 的差别
 - Regularition 
 	- 注意 J（theta）及求导计算时均没有对theta0的penalty. 
 
-## 1.3. WeekNeural Network
+# 3. Week_Neural Networks: Representation
 
 NN使用
 
@@ -60,7 +108,7 @@ NN使用
 
 本节中讲的激活函数还是Logistic regression中的。
 
-### 1.3.1. max (x)
+## 3.1. max (x)
 
 - max (x, [], dim)
 - [w, iw] = max (x) 
@@ -68,7 +116,7 @@ NN使用
 
 Find maximum values in the array x ， 亦可返回索引iw; 对二维矩阵默认返回一行，如果想返回列就需要设定dim=2，同时中间加一个空矩阵参数[]，我猜是实现时为了区别参数而采用
 
-### 1.3.2. find
+## 3.2. find
 
 index_zero = find( pred1 == 10);
 找出pred1中所有数据为10的元素的下标。
@@ -76,7 +124,7 @@ index_zero = find( pred1 == 10);
 pred1( index_zero, 1) = 0 ;
 然后将这些元素的值设置为0.
 
-## 1.4. Week
+# 4. Week_Neural Networks: Learning
 
 ![](./DR/backpropogation.png)
 
@@ -91,11 +139,9 @@ pred1( index_zero, 1) = 0 ;
 - X = [1,2; 3,4; 5,6]
 - X(2:end,:) 去除第一行
 
+# 5. Week_Advice for Applying Machine Learning
 
-## 1.5. Week
-
-
-### 1.5.1. Model Selection
+## 5.1. Model Selection
 
 数据集分为：Training Set, Cross Validition Set, Test Sec
 
@@ -105,7 +151,8 @@ Training Set 用来得到theta；Cross Validtaion Set用来选择lambda、多项
 
 如果所有选择都通过Training Set得到，就容易产生overfitting的问题。
 
-### 1.5.2. Bias vs Variance
+## 5.2. Bias vs Variance
+
 以只有一个输入变量为例,当然本质上x^p可以当成其他输入。
 
 h = theta0 + (theta1\*x + theta2\*x^2 + theta3\*x^4....) 
@@ -113,14 +160,14 @@ h = theta0 + (theta1\*x + theta2\*x^2 + theta3\*x^4....)
 theta0对h影响太大，就是underfitting，就是Bias问题，结果就是预测结果曲线太平，不能反映变化的式样；
 （theta1\*x + theta2\*x^2 + theta3\*x^4....）对h影响太大，就是overfitting，就是Variance问题，就是预测结果曲线太曲，genelization不够好。
 
-### 1.5.3. Choose Regulariztion
+## 5.3. Choose Regulariztion
 
 lambda是加在CostFunction里，惩罚theta1-n的。
 
 lambda太小，惩罚不够，产生Overfitting；
 lambda太大，惩罚守重，首先underfitting。
 
-### 1.5.4. Learning Curve
+## 5.4. Learning Curve
 
 是数据集大小的函数。随着数据集变大，Jtraining, Jcv和Jtest值。
 
@@ -133,7 +180,7 @@ lambda太大，惩罚守重，首先underfitting。
 	- High Variance问题，增大测试集，理优的THETA，能改善该结果。
 
 **编程时的小细节**：使用CostFunction学习THETA时，lambda是有值的；计算Jcv,Jtraining,Jtest时，lambda需要为0，因为此时只有计算error,不需要惩罚theta1-n。	 	 
-### 1.5.5. Summary: What to do to improve performance
+## 5.5. Summary: What to do to improve performance
 
 - More training data: fix high variance
 - Few features: fix high variance
@@ -143,7 +190,7 @@ lambda太大，惩罚守重，首先underfitting。
 - lower lambda: fix high bias
 
 
-## 1.6. NN
+## 5.6. NN
 
 - large NN
 	-	 
@@ -151,7 +198,7 @@ lambda太大，惩罚守重，首先underfitting。
 	- computitonal efficent
 	- underfitting	 
 
-## 1.7. Eror Analysis
+## 5.7. Eror Analysis
 
 Evidence driving deision making instead of 'gut feeling'
 
@@ -161,7 +208,7 @@ Mannually analyse the training examples where your algorism poorly works on.
 
 Try any new ideas or tools to get the number evidence to determine to use it or not.
 
-## 1.8. Using Large Data Set
+## 5.8. Using Large Data Set
 
 A high performance algorism should meet:
 
@@ -170,15 +217,15 @@ A high performance algorism should meet:
 2. Larget training set, which will eliminate high variance.
 
 
-## 1.9. Week
+# 6. Week_Support Vector Machine, SVM
 
-### 1.9.1. Support Vector Machine, SVM
+## 6.1. Support Vector Machine, SVM
 
 Sometimes is called Large margin classifier, since it provide a margin between positive and negtive examples.
 
 Change the cost function of logistic regression
 
-### 1.9.2. Math behind SVM
+## 6.2. Math behind SVM
 u=[u1,u2] v=[v1,v2]
 u'v=p\*||u||=p\*(u1^2 + u2^2 ) ^(1/2)
 
@@ -194,7 +241,7 @@ u'v=p\*||u||=p\*(u1^2 + u2^2 ) ^(1/2)
 
 这就是选theta的直观依据。
 
-### 1.9.3. Kernels
+## 6.3. Kernels
 
 1.Put several Landmark in the coordinate system。
 2.Similarity function or Kernal function, caculate the distance between the sample data and the Landmark
@@ -209,7 +256,7 @@ Gussian Kernel:
 	- f~=0 当x与landmark不同时
 	- 高斯函数有一参数，决定了山的半径与坡度，其值与半径成正比。即与landmark离多近可以叫相似，多远后就是完全不同。
 
-### 1.9.4. Support Vector Machines
+## 6.4. Support Vector Machines
 
 Kernel
 
@@ -222,7 +269,7 @@ Choose SVM parameters C:
 - Large C : high variance,Low bias 
 - Small C: lower variance,higher bias
 
-### 1.9.5. Excise
+## 6.5. Excise
 
 - 选定C和sigma
 - 训练得theta
@@ -255,22 +302,22 @@ endfor
 
 ``` 
 
-## 1.10. Week
+# 7. Week_
 
-### 1.10.1. Unsupervied Learning
+## 7.1. Unsupervied Learning
 
 - Unlabeled data set
 - aim to find the structure of the data set
 - clustering alogrism and 
 
-### 1.10.2. Clustering: K-Means Alogrism
+## 7.2. Clustering: K-Means Alogrism
 
 - randomly pick centroid
 - assigned xi to neareast centroid
 - move centroid to means of x assigend to it
 - repeat this process until centroid stop moving
 
-#### 1.10.3. Optimization Objectives
+### 7.2.1. Optimization Objectives
 
 C^\(i) is the index of centroid, x^i is assigned to.  
 
@@ -280,18 +327,19 @@ Cost function J:
 sum(||x^i - u_\ci || ^2)/m
 \\]
 
-### Dimensionality Reduction
-### PCA
+## 7.3. Dimensionality Reduction
 
-#### mean normalization 
+## 7.4. PCA
+
+### 7.4.1. mean normalization
 
 replace xi with xi - mean(x)
 
-#### scale
+### 7.4.2. scale
 
 scale difference features to comparable values
 
-#### how to get u
+### 7.4.3. how to get u
 
 sigma = X' * X /m 
 
@@ -304,7 +352,7 @@ Z = X * Uk' ;  % m.n * n.k = m.k
 注意：这里说到vector都是一列
 但样本集：X 中一个样本是一行啊！！
 
-#### how to choose k
+### 7.4.4. how to choose k
 
 - retain 95%-99% of variance
 
@@ -314,7 +362,53 @@ Z = X * Uk' ;  % m.n * n.k = m.k
 
 - find the minium k : sum^1-k ( sii)/ sum^1-n (sii) >= 0.99, which is the minimum k retain 99% of the variance.
 
-#### Advice for applying PCA
+### 7.4.5. Advice for applying PCA
 
-## Week 9 Anomaly Detection
+# 8. Week_Anomaly Detection
+
+## Density Estimation 
+
+### Problem Motivation
+
+- Given a data set X will n features: x1, x2 ... xn.
+
+- Find a model p(x) to best describle the X.
+
+- Use p(x) to estimate new data to see it's normal or anomaly.
+
+### Gaussian Distrubution
+
+x ~ Gussain( u, sigma^2 ).
+
+### Algrithm : Density estimation
+
+- Assume, each feature xi distributed according to a Gaussian dsitribution g(ui, sigma_i^2).
+- use trainning set X to find U and Sigma for all features.
+- Use found value to estimate any new data x.
+
+Finally:
+
+- $ p(x) = p(x_1; u_1, sigma_1^2 ) * p(x_2; u_2, sigma_2^2 ) ... p(x_n; u_n, sigma_n^2 ); $ 
+- $ u_j = mean(sum(x^i_j) ); $
+- $ sigma_i = mean(sum( (x^i_j-u_j)^2 ) ) $
+- if p(x) < threshold then it's anormaly. Need define a threshold.
+
+> Assumption is that all those features are independent to each other.
+> PCA could be used in advance to get independant features.
+
+## Building an Anomaly Detection System
+
+For example, you have 10000 normal samples, and 20 flawed samples. Split them as the following:
+
+- 6000 unlabeld normal data set for trainning set.
+- 2000 labelled normal and 10 flawed sample in cross-validation set.
+- 2000 labelled normal and 10 flawed samples in test set.
+
+Don't use the same samples in CV and Test data set.
+
+## Multivariate Gaussian Distribution
+
+## Predicting Movie Ratings
+
+## Collaborative Filtering
 
