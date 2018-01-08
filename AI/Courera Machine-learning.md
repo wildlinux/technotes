@@ -1,6 +1,9 @@
 当前机器（深度）学习的核心的
+
 - 利用可微编程进行优化（收敛）
 - 利用反向传播增加深度及收敛
+
+Features必须是有效的，只是我们（programmer）不知道如何组合应用这些feature去预测，所以用机器学习的方法。
 
 <h1> 1. Courera Machine-learning </ha>
 <!-- TOC -->
@@ -42,14 +45,19 @@
         - [7.4.4. how to choose k](#744-how-to-choose-k)
         - [7.4.5. Advice for applying PCA](#745-advice-for-applying-pca)
 - [8. Week_Anomaly Detection](#8-weekanomaly-detection)
-    - [Density Estimation](#density-estimation)
-        - [Problem Motivation](#problem-motivation)
-        - [Gaussian Distrubution](#gaussian-distrubution)
-        - [Algrithm : Density estimation](#algrithm-density-estimation)
-    - [Building an Anomaly Detection System](#building-an-anomaly-detection-system)
-    - [Multivariate Gaussian Distribution](#multivariate-gaussian-distribution)
-    - [Predicting Movie Ratings](#predicting-movie-ratings)
-    - [Collaborative Filtering](#collaborative-filtering)
+    - [8.1. Density Estimation](#81-density-estimation)
+        - [8.1.1. Problem Motivation](#811-problem-motivation)
+        - [8.1.2. Gaussian Distrubution](#812-gaussian-distrubution)
+        - [8.1.3. Algrithm : Density estimation](#813-algrithm-density-estimation)
+    - [8.2. Building an Anomaly Detection System](#82-building-an-anomaly-detection-system)
+        - [8.2.1. Alogrithm](#821-alogrithm)
+        - [8.2.2. Anomaly Detection vs Supervised Learning](#822-anomaly-detection-vs-supervised-learning)
+        - [8.2.3. Choosing What Features to Use](#823-choosing-what-features-to-use)
+    - [8.3.  Multivariate Gaussian Distribution](#83-%08-multivariate-gaussian-distribution)
+    - [8.4. Predicting Movie Ratings](#84-predicting-movie-ratings)
+        - [Content based Recommenation](#content-based-recommenation)
+    - [8.5. Collaborative Filtering](#85-collaborative-filtering)
+    - [Low Rank Matrix Factorizatoin](#low-%08rank-matrix-factorizatoin)
 
 <!-- /TOC -->
 # 1. Week_Introduction
@@ -366,9 +374,9 @@ Z = X * Uk' ;  % m.n * n.k = m.k
 
 # 8. Week_Anomaly Detection
 
-## Density Estimation 
+## 8.1. Density Estimation
 
-### Problem Motivation
+### 8.1.1. Problem Motivation
 
 - Given a data set X will n features: x1, x2 ... xn.
 
@@ -376,11 +384,11 @@ Z = X * Uk' ;  % m.n * n.k = m.k
 
 - Use p(x) to estimate new data to see it's normal or anomaly.
 
-### Gaussian Distrubution
+### 8.1.2. Gaussian Distrubution
 
 x ~ Gussain( u, sigma^2 ).
 
-### Algrithm : Density estimation
+### 8.1.3. Algrithm : Density estimation
 
 - Assume, each feature xi distributed according to a Gaussian dsitribution g(ui, sigma_i^2).
 - use trainning set X to find U and Sigma for all features.
@@ -396,7 +404,9 @@ Finally:
 > Assumption is that all those features are independent to each other.
 > PCA could be used in advance to get independant features.
 
-## Building an Anomaly Detection System
+## 8.2. Building an Anomaly Detection System
+
+### 8.2.1. Alogrithm
 
 For example, you have 10000 normal samples, and 20 flawed samples. Split them as the following:
 
@@ -406,9 +416,70 @@ For example, you have 10000 normal samples, and 20 flawed samples. Split them as
 
 Don't use the same samples in CV and Test data set.
 
-## Multivariate Gaussian Distribution
+Use Prceision/Recall (F1-score) to evaluate the model of choose threshold. 
 
-## Predicting Movie Ratings
+### 8.2.2. Anomaly Detection vs Supervised Learning
 
-## Collaborative Filtering
+Choose Anomaly Dectetion when:
 
+- you have **far few** positive sample data (y=1 or flawed sample).
+- It's hard to learn from positive examples, too many different type of anomaly samples, like network intrution, malware, it change rapadly.
+
+所有核心是看数据，如果数据中有大量positive样本，算法能学到就可以用supervised learning. 如果数据中基本都是negtive样本，就只能用基于正态分布的Anomaly Detection了。
+
+加Features其实就是现有Features的组合或变形（运算），可能通过加一层NN来实现。
+
+### 8.2.3. Choosing What Features to Use
+
+Since Gussian distribution is used that your features sample should distributes in a Gussain way.
+
+- Plot your feature x1 of of all samples to see the distributes. 
+- Transform it to make it distribute in a Gussian way, if it doesn't.
+    - for example, use new feature like log(x1) to replace x1.
+
+> octave, hist to plot data.
+
+如果positive样本就处在高斯分布的中央位置，那意味着，我们需要引用新features. 必须把它分布在边缘。
+
+如果你的features与anormaly无关，那当然检测不出来。
+
+## 8.3.  Multivariate Gaussian Distribution
+
+如上实现的Anomaly Detection各个Features是相互独立的，没有相关性。
+但在实际应用中，有时需要根据Features之间的相关性进行判定是否Anormaly,例如:
+
+- CPU高，内存高 是正常
+- CPU高，内存低 是异常
+
+这是就需要引入Features相关性，即Multivariate Gaussian Distribution。
+
+具体实现octave中都有现成的算法，应用即可。
+
+计算复杂度高。
+
+## 8.4. Predicting Movie Ratings
+
+### Content based Recommenation
+
+前提：每部电影都得有Features，如action=0.99, romantic =0.5。
+
+然后这个问题就退化为一个线性回归了，为每个用户找一个 theta, 满足：
+
+- theta' * features_vector = rated_scores. 
+
+然后就可以拿这个公式来预测了。
+
+## 8.5. Collaborative Filtering
+
+反过不，如果已知 theta， 就可以用同样的算法来得到 features_vector.
+
+在实际应用中，可以随机生成一个 theta -> features_vector -> theta -> ..., 可以不断优化。
+
+通过算法学到的实际的Features, 并非有意义的“action, romantic”之类，只是一个数值的矩阵，和我们在电影网站看到分类不是一回事。
+
+## Low Rank Matrix Factorizatoin 
+
+Mean Normalization:
+
+- 学习前：algorithm_rating = real_rating - mean(real_rating)
+- 预测时：predicted_rating = algorithm_rating + mean(real_rating)
