@@ -18,7 +18,8 @@ output: revealjs::revealjs_presentation
 - 可以使用纯文本（markdown）实现以下效果哦。
 - 以下内容就是当前网页转为SLIDE的效果：一份文档，多种用途。
 
-> 本文中说到的slide，起到PPT一样的展示效果，但是一个动态网页，所以是在浏览器中打开的。
+- 本文中说到的slide，起到PPT一样的展示效果，但是一个动态网页，所以是在浏览器中打开的。
+- 优点很多哦，完全跨平台，不用装任何软件就能直接展示，有浏览器就行。
 
 ![It' cool ](./DR/Md_slides.gif)
 
