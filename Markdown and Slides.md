@@ -42,11 +42,11 @@ output: revealjs::revealjs_presentation
 
 ## 1.2 实现方法：使用vscode 
 
-试了几种，实测还是推荐这种方式。唯一不满意就是需要手工分页。已向插件作者提出建议，希望下一版中可以自动在一、二级标题后加分页符。
+试了几种，实测还是推荐这种方式。唯一不满意就是需要手工分页。已向插件作者提出建议，希望下一版中可以自动在一、二级标题后加分页符。
 
 - 安装vscode编辑器
 - 在vscode安装插件，revealjs
-- 正常编辑你的markdown文档
+- 正常编辑你的markdown文档，用“---”分隔每个slide。
 - 然后在vscode中，按F1，进入命令行
     - 选：Revealjs:show presentation in slide
     - Vscode会自动把md转换为slide模式。
@@ -78,9 +78,9 @@ output: revealjs::revealjs_presentation
     - 默认veticalSeparator是“--”，Separator是“---”。
     - 在普通Markdown中通过添加Separator实现slide分页（分屏显示）, 前后加空行。
     - 在一级标题前加Separator, 一级标题内的用veticalSeparator。
-    - 整体效果主是
+    - 整体效果会是
       - 左右键会在一级标题级间切换；上下键可在一级标题内切换。
-      - 第一行Slide都是一级标题，标题内的本级标题下的页面。
+      - 第一行Slide都是一级标题，标题内是本级标题下的页面。
 
 下图就是本文生成的Slide布局。
 
@@ -101,7 +101,7 @@ output: revealjs::revealjs_presentation
 
 ### 2.2.1. 文本段落左对齐
 
-生成的SLIDE默认是居中对齐，看着非常怪。在文档前面加上如下内容就变成左对齐了。
+生成的SLIDE默认是居中对齐，看着非常怪。在文档前面加上如下内容就变成左对齐了。这部分相当于一个定制的css文件，如果定制内容多的话，可以另外写一上文件，在md内引用。具体写法看revealjs官方说明。
 
 ```
 
@@ -117,12 +117,12 @@ output: revealjs::revealjs_presentation
 
 ```
 
---- //revealjs参数设置，必须在第一行
-theme : "white"
-transition: "convex"
+---                         //revealjs参数设置，必须在第一行
+theme : "white"             //背景本色方案
+transition: "convex"         //slide切换时的动画效果
 separator: "\n---\n"
 veticalSeparator: "\n--\n"
----
+---                          //参数设置结束
 
 <style type="text/css">   //加入个性化的css参数
     p { text-align: left; }
@@ -135,7 +135,7 @@ The rest are the markdown main content. //剩下是md文本内容
 
 ### 2.2.2. 自动生成separator
 
-- 使用RStudio实现。见后文。还是希望插件作者增加这个功能。
+- 使用RStudio实现。见后文。还是希望插件作者增加这个功能。
 
 ---
 
@@ -173,13 +173,15 @@ The rest are the markdown main content. //剩下是md文本内容
 
 --
 
-- Install  pandoc
-    - **slidy** style works fine to me
+- 使用pandoc工具
+    - **slidy** 这个模板也挺好用的，就是没那么炫。
         - pandoc yourfile.md -o yourslides.html -t slidy -s
     - 具说 --slide-level 2 可以生成separator
         - pandoc -s -S -t revealjs test.md -o test.html --slide-level 2 
+- 使用vscode pandoc插件
+  - 在vscode中也有pandoc插件，模板呀参数呀都可以设置好，在vscode中直接调用。
 
-具体参考下面的文献做可，实测可用。不怕命令行的可以用这种方式。转word，转PDF都可以。
+具体参考下面的文献做的，实测可用。不怕命令行的可以用这种方式。转word，转PDF都可以。
 
 This is the <https://linux.cn/article-4080-2.html> introduce how to produce slides with markdown.
 
