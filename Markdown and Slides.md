@@ -45,6 +45,11 @@ output: revealjs::revealjs_presentation
 
 又不想手工分页，就找了下面这个工具，可以自动添加分隔符。
 
+下图是使用vscode的效果。开始是以前定的原始的文档网页版，git在oschina上的。动图后面左侧是文档原文，右侧是展示效果。同一个文档，就要做PPT了。
+
+![It' cool ](./DR/vscode.gif)
+
+
 ## 1.3 实现方法2：使用RStudio
 
 ![using RStudio and revealjs to render your markdown to get the slide ](./DR/RStudio.jpg)
