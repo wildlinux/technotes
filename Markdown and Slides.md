@@ -16,10 +16,17 @@ output: revealjs::revealjs_presentation
 ## 1.1 效果
 
 - 可以使用纯文本（markdown）实现以下效果哦。
-- 其意义在于内容与显示的分离。
-- 以下内容就是本文档转为SLIDE的效果。
+- 以下内容就是当前网页转为SLIDE的效果：一份文档，多种用途。
+
+> 本文中说到的slide，起到PPT一样的展示效果，但是一个动态网页，所以是在浏览器中打开的。
 
 ![It' cool ](./DR/Md_slides.gif)
+
+- 其意义在于维护简单了
+  - 当前这个网页即是一份详细的操作记录。
+  - 也可以稍加处理就成了一份可以展示、讲解的PPT。
+
+> 可以通过简单的处理过滤掉文档中不想做成SLIDE的内容部分，又基本不改变文档内容。 
 
 ## 1.2 实现方法1：使用vscode 
 
@@ -68,11 +75,16 @@ output: revealjs::revealjs_presentation
 下面的图并未优化，略乱，只是为了展示排列效果。
 ![Slide排列效果，第一行为一级标题 ](./DR/Markdown_slides.png)
 
-## 2.2. 个人定制
+另一种利用横纵排列的思路是：
+
+- 把自己相展示的内容放在第一行（横向排列），作为展示的主线。
+- 一些细节或可放可不放的内容放在纵向排列，酌情展示。
+
+## 2.2. 需要定制的方面
 
 ### 2.2.1. 文本段落左对齐
 
-默认是居中对齐，看着非常怪。在文档前面加上如下内容。
+生成的SLIDE默认是居中对齐，看着非常怪。在文档前面加上如下内容就变成左对齐了。
 
 ```
 
@@ -107,7 +119,7 @@ The rest are the markdown main content. //剩下是md文本内容
 
 # 3. 样本
 
-下面的第一“--”就会分出一展示中的一页Slide.
+下面的每一个“--”就会分出展示中的一页Slide.
 
 ```markdown
 
@@ -117,14 +129,18 @@ The rest are the markdown main content. //剩下是md文本内容
 --
 ### 1.2 
 ---
-^# 2 This is h1
+# 2 This is h1
 
 ```
 # 4. 其他实现方式
 
-- Install local pandoc
+这种方法现在很流行，有除了revealjs外，还有很多其他模板可以用。下面就使用pandoc，利用slidy模板生成slides。
+
+> pandoc是实现文件格式转换的工具。本例中是把markdown格式，转换为html格式。
+
+- Install  pandoc
     - **slidy** style works fine to me
-        - pandoc yourfile.md -o slides.html -t slidy -s
+        - pandoc yourfile.md -o yourslides.html -t slidy -s
 - pandoc plugin for vscode
 - revealjs plugin for vscode also works
 
