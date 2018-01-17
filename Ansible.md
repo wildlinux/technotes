@@ -31,9 +31,17 @@ $ansible 10.9.208.41 -u vagrant --ask-pass -a "/sbin/ifconfig"
 Edit /etc/ansible/hosts as the following
 
 ```ymal
-[dbservers] 
-10.9.208.41 ansible_user=root   
-10.9.208.42 ansible_user=root 
+
+[dbserver1] 
+192.168.21.135 ansible_user=root 
+
+[dbserver2]
+192.168.21.134 ansible_user=root
+
+[dbservers:children]
+dbserver1
+dbserver2
+
 ```
 
 Try again the following command:
