@@ -1,12 +1,10 @@
+[Toc]
+
 # Neural Networks and Deep Learning
 
 ## Week1
 
-### Geoffrey Hinton interview
 
-- Brain is not sympolic
-- Unsupervised learning is more important
-- read some paper then follow your instinct
 
 ## Week2 Logistic Regression as a Neural Network
 
@@ -41,12 +39,7 @@ assert(a.shape == (5,1)) helps but it's expensive
 - Reshape each train data to a vertical vector (x, 1)
 - Standardize the elements
 
-### Pieter Abbeel interview
-
-- 算法还不擅长在长时间维度上识别 pattern , 从一天或一生中总结出什么规律。
-- 算法可以识别一些pattern， 但如何使用这些pattern是另一个问题。像人会有一些认识或想法，如何利用。
-- 设计一个生成 增加深度学习算法 的算法。
-- 学习就要自己多多练习。
+。
 
 # Week3 Shallow Neural Network
 
@@ -77,9 +70,10 @@ assert(a.shape == (5,1)) helps but it's expensive
 
 if a=g(z)= sigmoid(z) g'(z)=a(1-a)
 
-if a=g(z)=tanh(z)  g'(z) = 1 - a^2^
+if a=g(z)=tanh(z)  g'(z) = 1 - a<sub>[2]</sub><sup>[3]</sup>
 
 if g(z)=Relu(z) = max(0,z)
+
 
 ### Formulas
 
@@ -101,3 +95,138 @@ Forward propagation
     - anticipate security problems regarding AI now, and put that into the algorithm. 
 
 # Week4 Deep Neural Network
+
+## What's a deep neural network
+
+## Forward Propagation in a Deep Neural Network
+
+## Getting Your Matrix Demension Right
+
+## Why Deep Representation 
+
+- 深度网络学习到的权重是可以复用的。
+    - 就像视频中说到的，第一层是识别“边”的，那这一层的权重可以利用到任何需要识别“边”的网络中。
+- 任务分解
+    - 把大任务分解成小任务比直接完成大任务要开销小的多
+    - 类似于深度学习比shallow学习的优势
+
+## Forward and Backward Propagation 
+
+A[i] => W[i+1] b[i+1] -> Z[i+1] => A[i+1] =>....=>A[e], Y => L
+
+dA[e]即 D(L)/D(A[e])
+
+dA[i] -> dZ[i] -> dW[i], db[i] => dA[i-1]
+
+# Improving DNN - Hyperparameter Tuning, Regularization, Optimization
+
+## Week1
+
+### Setting Up
+
+- Train/dev/test 
+    - ratio is like 98/1/1 in big data era.
+    - come from the same dataset
+- Bais and Variance
+    - Bais : underfitting, 常量影响太大
+    - Variance : overfitting，变量影响太大
+    - Samples, train error vs dev error:
+        - %1 vs 15% : high variance
+        - %15 vs %16: high bais, given the base error is 0
+        - %15 vs 30%: high variance and high bais
+        - %0.5 vs 1%: low variance and low bais
+- Basic Recipt for Maching Learning
+    - High Bais 
+        - Choose bigger network
+        - Trainning longer
+        - Choose another NN arch
+    - High Variance
+        - More Data
+        - Regularization
+        - Choose another NN arch
+  
+### Regularization
+
+REGULARIZATION: 平衡参数，让参数都差不多，不太大。
+
+- L2 Regularization
+    - Add penalty to big W
+    - Why it works
+        - lambda penilize big W
+        - By seting lambda to a big value, it zero W that simplify the NN
+- Dropout Regularization
+    - set probability to remove nodes of each layer
+    - Samples
+        - Inverted Dropout
+    - Why it works
+        - can't rely too much on certain features
+- Other Regularization Methods
+    - Data Augement
+    - Early Stop    
+        - Computational cheap option
+        - Downside
+            - mix two problems, underfitting and overfitting, to make it complicated. It's better to address one at a time.
+
+# Python
+
+for l in range (L):
+    print (" l = " + str(l) + " of " + str(L))
+
+loop from 0 to L-1
+
+# 一些想法
+
+## 人物对话中学到的
+
+### Geoffrey Hinton interview
+
+- Brain is not sympolic
+- Unsupervised learning is more important
+- read some paper then follow your instinct
+- 跟随自己的直觉。跟随自己的直觉当然可能失败，但如果不跟随自己的直觉什么都不会做成。
+
+### Pieter Abbeel interview
+
+- 算法还不擅长在长时间维度上识别 pattern , 从一天或一生中总结出什么规律。
+- 算法可以识别一些pattern， 但如何使用这些pattern是另一个问题。像人会有一些认识或想法，如何利用。
+- 设计一个生成 增加深度学习算法 的算法。
+- 学习就要自己多多练习
+
+
+## 方字就是抽象概念
+
+任何现实生活中的色相，都是用文字描述的，文字即概念，没有人可以离开文字思考，文字及抽象。
+
+图、音乐有类似的抽象作用。
+
+所以建议一个AI，通过少量观察提取出共同的“模式pattern”，然后给这个pattern起个名字，这就是抽象的过程。然后拿这个pattern去套各种东西，套出新的pattern（原pattern的变形、组合、异化），进行新的抽象（起名），以此扩展。现通过与其他AI或要人类的确认（增强学习：问这是xxx吗？回答：Y/N），从而进一步增强。
+
+## 同样的网络不同的权重
+
+尽量使用同构的网络，这样使用不同的参数值就可以识别不同的东西。
+
+使用多个这样的网络，类似模拟大脑的不同部分。但可以比大脑大的多。
+
+## 实现不同功能的互通
+
+音乐转成描述音乐的文字
+
+图片转成描述
+
+描述转成图
+
+以上就是类似人类的想像。
+
+## 常识
+
+人们常拿重力来举例人类的常识。可实则重力是对生活观察的结果的抽象。有了抽象能力就能形成重力的概念，也就是能“想象/生成”提起重物时的图像。
+
+## 抽象概念
+
+抽象概念即是连接：图片可以连接到文字，文字可以连接到声音，声音可以连接到图片和文字
+
+但文字好像更基础，思考时大部分用声音，或图片。盲人用声音，哑巴用图片。所以什么都是可以用来思考的。
+
+连接连接连接。
+
+一个简单的故事 这个世界每个人都想当影帝
