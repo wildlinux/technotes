@@ -483,3 +483,73 @@ Mean Normalization:
 
 - 学习前：algorithm_rating = real_rating - mean(real_rating)
 - 预测时：predicted_rating = algorithm_rating + mean(real_rating)
+
+
+# 9 Week-Ten Learning With Large Datasets
+
+## 9.1 Gardient Descent with Large Datasets
+
+### 9.1.1 Learning With Large Datasets
+
+Larger dataset contribute little to high bias problem while will improve the performance of high variance problem.
+
+So, to plot a learning curve based on m, to verify the learning algorithm is a good idea. 
+
+### Stochastic Gradient Descent
+
+传统的Gradient Descent又称为 Batch Gradient Descent. Batch就是指使用**所有**样本数据求解。
+
+Stochastic GD, 是让theta对每一个样本进行迭代更新
+
+- 运算速度大大加快
+    - BGD，一步就需要求和所有样本；SGD遍历一次样本基本就完成计算了。
+- 每步迭代最不保证是方向正确的
+- 最终结果不保证的最优的
+- 可以重复1-10次这样的过程，基本上可以达到较好的效果。每重复一次仅相当于BGD迭代一次的计算量。
+- 在样本空间较大时百万级以上，这种算法性价比较高。
+
+### Mini-Batch Gradient Descent
+
+- BGD每次迭代需要计算所有样本
+- SGD每次迭代只需要一个样本
+- MGD每次迭代需要b个样本，1<b<<m，典型的2<b<100
+    - MGD比SGD快的原因是b样本求和可以用矩阵运算实现
+    - **My idea**这样说的话，b应该依据硬件支持的最大并行数  
+
+### Stochastic Gradient Descent Convergence
+
+#### How to make sure it converge
+
+SGD不保证每步方向的正确；只保证对当前样本是在优化，所以：
+
+- 对某样本
+    - 针对该样本的theta更新前计算处cost1,theta更新后计算下cost2；
+    - 所有样本cost2<cost1就说明算法本身是没问题的
+- 所以可以基于iteration plot cost
+    - 每样本一plot:整体走向是下降的，噪点多，不平滑
+    - 每n样本一plot cost均值:整体走向是下降的，n越大越平滑
+    - 如果整体上升说明alpha太大
+    - 如果起伏不定，那就是算法错了吧    
+
+#### How to pick alpha
+
+alpha = constant1/(iterationCount+constant2)
+
+- 原由
+    - SGD是的每一迭代都是在当前theta的基础上根据样本**随机**的调整alpha，不保证是**优化**
+        - 再次强调，SGD整体方向是在优化，但每步不一定是在优化theta。 
+    - 所以希望在越到后来（离全局最优解越近），每次调整的幅度就越小，这样最终不会在最优解周围跳的太远。
+
+## Advanced Topics
+
+### Online Learning
+
+就是根据实时的访问数据，实时的学习。而不是通过整理好的样本集学习。
+
+### Map Reduce and Data Paralelism
+
+# Week-Eleven 
+
+## Photo OCR
+
+
