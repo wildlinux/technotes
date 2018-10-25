@@ -551,12 +551,294 @@ move more than on cell at a time.
 
 ## WEEK2:
 
-## WEEK3:
+### Case Studies
 
-## WEEK4：
+- Classic networks
+  - LeNet-5
+    - 6K parameters
+  - AlexNet
+    - 6M parameters 
+  - VGG
+    - CONV * 13 + POOL * 5 + FC * 2
+    - 138M parameters
+- ResNet (152 layers)
+- Inception
+
+> 把二十个Logistic Regression堆叠到一起就能输出2^20^个值。
+
+> 不要固定连接，要可以越过某些层直接连接
+
+- ResNets
+  - How
+    - Add A^[1]^ to Z^[3]^, that layer 1 now goes directly to lay3
+    - similar setup is applied to every two layers 
+    - it could improve performane for very deep network
+  - Why
+    - if W^[2]^ and b^[2]^ are zeros, given the activation function is **Relu**, then A^[3]^ = A^[1]^, that there are chances that **shortcut** between layer1 and layer3 won't hurt the performance. 
+
+- 1x1 Convolution
+  - used to change numbers of channels
+  - add another layer of non-linear computation
+- Inception Network Motivation
+  - Instead of choosing a specific size of filter by yourself, the Inception Layers encourge you integrate all possible size of filters and let the alogrithm to decide which effect the output
+    - Special technic need to used to keep the uniform of output of all filters
+  - Computional Cost
+    - if using 32 5x5 filters to a 28x28x192 volumn, the total multiply need to do is: 28x28x32(the output volumn)x5x5x192=120M
+  - Bottleneck layer
+    - 1x1 CONV layer could be used to reduce the above computional cost to 12M while hurt not the performance.
+    - 28x28x192 -> 1x1x16 CONV -> 5x5x32 CONV => 28x28x32
+  - Inception Network consists of layers as above
+  - "Inception"  comes from the file "The Inception", means we need go deeper into the NN. In this case, it step deeper to let the net choose the filters. 
+  - GoogleNet is Inception Net
+
+> 这个有两点想法和我一致，一是要尽量使用同质的网络，通过重复来实现性能增强；二是在中间层产生一个输出，我是想给这个输出更多的用途。
+
+### Practicl Advices for using ConvNets
+
+- Using Open-Source Implementation
+  - Github has most of the implementation of algorithms 
+- Transfer Learning, like you want catagory all cat images into three type: Tigger, Misty and Neither
+  - You can
+    - keep the net and freeze weights, replace and train only the last layer like softmax
+    - keep the early layers of net and weights, replace nad train the later layers
+    - keep the net and weights as a initinalization, and retrain the whole parameters.  
+  - Concretely
+    - Take the whole network and parameters from Github
+    - freeze the early layers by setting trainable_parameters=0
+      - The more data you have the less layers you need to freeze 
+    - replace and train only the last layer for your data set 
+    - you can computer your training set to reach the last frozen layer, like A^[i]^, use A^[i]^ to train your trainable layers, which will save the computation cost in each iteration to compute the previous layers' activation vectors.
+- Data Augmentation
+  - Mirror
+  - Randomly Croping
+  - Color Augmentation 
+- State of Computer Vison
+  - the more data the less hand-engneering 
+  - Tips for competition
+    - Ensembling: Train several several nn and average the performance
+    - Multi-crops 
+
+### Programming Assignment
 
 
-# LESSION 5:
+```python
+
+def HappyModel(input_shape):
+    """
+    Implementation of the HappyModel.
+    
+    Arguments:
+    input_shape -- shape of the images of the dataset
+
+    Returns:
+    model -- a Model() instance in Keras
+    """
+    
+    ### START CODE HERE ###
+    # Feel free to use the suggested outline in the text above to get started, and run through the whole
+    # exercise (including the later portions of this notebook) once. The come back also try out other
+    # network architectures as well. 
+    X_input = Input(input_shape)
+    X = ZeroPadding2D((3,3))(X_input)
+    print("X shape after padding is : " + str(X.shape))
+    # CONV -> BN -> RELU Block applied to X
+    X = Conv2D(32, (7, 7), strides = (1, 1), name = 'conv0')(X)
+    print("X shape after CONV0 is : " + str(X.shape))
+    X = BatchNormalization(axis = 3, name = 'bn0')(X)
+    print("X shape after BN0 is : " + str(X.shape))
+    X = Activation('relu')(X)
+    print("X shape after Activation is : " + str(X.shape))
+    # MAXPOOL
+    X = MaxPooling2D((2, 2), name='max_pool')(X)
+    print("X shape after MaxPool is : " + str(X.shape))
+    # FLATTEN X (means convert it to a vector) + FULLYCONNECTED
+    X = Flatten()(X)
+    print("X shape after Flatten is : " + str(X.shape))
+    X = Dense(1, activation='sigmoid', name='fc')(X)
+    print("X shape after Dense is : " + str(X.shape))
+
+    # Create model. This creates your Keras model instance, you'll use this instance to train/test the model.
+    model = Model(inputs = X_input, outputs = X, name='HappyModel')
+    ### END CODE HERE ###
+    
+    return model
+
+happyModel = HappyModel((64, 64, 3))
+happyModel.compile(optimizer="Adam", loss ="binary_crossentropy", metrics = ["accuracy"])
+happyModel.fit(x=X_train, y = Y_train, epochs =5, batch_size=32)
+happyModel.evaluate(x=X_test, y = Y_test)
+
+X shape after padding is : (?, 70, 70, 3)
+X shape after CONV0 is : (?, 64, 64, 32)
+X shape after BN0 is : (?, 64, 64, 32)
+X shape after Activation is : (?, 64, 64, 32)
+X shape after MaxPool is : (?, 32, 32, 32)
+X shape after Flatten is : (?, ?)
+X shape after Dense is : (?, 1)
+
+
+happyModel.summary()
+plot_model(happyModel, to_file='HappyModel.png')
+SVG(model_to_dot(happyModel).create(prog='dot', format='svg'))
+
+```
+
+- vanishing gradients
+  - 最后一层计算出的导数值会向前分配到每一层的Weight中，在一层层传递过程中，每层都会乘以WeightMatix(??)，其中的值都是小于1的，这样到第一层时值已经很小了，那参数调整的就很小，学习的过程就很慢。
+
+## WEEK3: Object detection
+
+### Object Localization
+
+- Image classification : Is this a car?
+- Image classification with localization: Is this a car? where is it?
+- Detection: How many cars are there and where are them?
+
+All objects need to be labeled in training and proper loss function defined.
+
+### Landmark Detection
+
+Add corrodinate label to image, you can have your NN to detect landmarks.
+
+### Object Detection
+
+- Sliding Windows Detection
+  - Crop the pictures with a size of a sliding windows and detect object in the cropped sub-pictures and repeat the process.
+  - parameters: stride + windows size 
+  - computaiton cost is high
+  
+### Convolutional Implementation of Sliding Windows
+
+- Turning FC layers into Convolutional layers
+  - it's equvilent to FC
+  - it's pre-request for the following algorithm
+- Convolutional Implementation of Sliding Windows
+  - 直接使用大尺寸的图像输入到原来为小尺寸图像训练的CNN
+  - 结果就类似于对大图像进行Crop,并对每个Crop进行CNN
+  - 其中Sliding Windows的stride取决与CNN中间，如使用了几个改变图像尺度layer。如例子中有一个2x2的pool,结果就是相当于Stride是2.
+  - 由上一条，可以自然推导出，对于深的CNN，POOL layers太多，那可可能会让Stride过大。
+  - sliding windows的大小即是原始CNN中的输入大小。
+
+### Bounding Box Predictions 
+
+- YOLO: You Only Look Once
+  - 把原始图片等分成若干小方格，分别对各小格进行 Object detection and Localization.
+  - 只要分的足够小，就可保证每格只有一个object
+  - 对于横跨多个方格的object，计算结果保证只出现在一个格式中（？？） 
+  - 合适的选择中间的各层，让结果是满足要求形状的volumn。
+
+### Intersection Over Union 
+
+- It's a defination of 'accuracy' of object detection, to evaluate your detection algorithm.
+- IoU = the size of the intersection / the size of the union, of your predicted rectangle and the precise rectangle. More general, IoU is a measure of overlap between two bounding box. 
+- If IoU >=0.5 ,then conventionally, it is regarded as correct.
+
+### Non-max Suppression
+
+- each objects may be detected multiplely 
+- each detected rectangle has its probability Pc in the output vector
+- discard all rectangle whose Pc <= 0.6
+- pick the rectangle with highest probability
+- remove the rectangle overlappted with it, like IoU > 0.5
+- pick the next highest and repeat
+- if having multiple objects, you need apply this process independently on each object.
+
+### Anchor Boxes
+ 
+- 在Non-max Suppression中，重叠多的两个box会被删除一个
+- 那万一有两个object真的重叠呢
+- 就使用Anchor Boxes，可以同时返回这两个重叠的Box，而不是非得删除一个。
+- 对于更多特殊情况，这种算法都处理不了：如三个物体重叠，重叠的物体形状相同等。
+- Archor Boxes与检测到的Box的相似度也用IoU来计算
+
+### YOLO , Put Everything Together
+
+> 使用越来越复杂的结果向量，也需要越来越复杂的人工标识。
+
+### Programming
+
+```python
+
+    box_classes = K.argmax(box_scores, -1) 合并最后一维
+    box_class_scores = K.max(box_scores, -1)
+     
+
+    out_scores, out_boxes, out_classes = sess.run( [scores, boxes, classes] , feed_dict={yolo_model.input: image_data , K.learning_phase(): 0})
+ 
+
+
+```
+
+## WEEK4：Special applications: Face recognition & Neural style transfer
+
+### Face Recognition
+
+- Face Verification
+  - Input: Image and Id/name
+  - Output:  whether the image is the that of the claimed person
+  - 1 to 1 problem, simple
+
+- Face Recognization
+  - Has a db of K persone
+  - Input: image
+  - Output: ID
+
+- One Shot Learning
+  - Similarity Function
+    - d(img1, img2) = the degree of difference of the two images
+
+- Siamese Network
+  - encoding the input image 
+  - Learn a NN to output a vector representation of the inputted image. 
+
+> Siamese Network中的一个思路就是把图像，降维成一个128bit的表示，这就是一种抽象啊！就是概念的形成。然后，任何其他图像也转换成同样的表示，这两个向量的距离就表示这两个图像的相似度。
+
+- Triplet Loss
+  - Triplet: Anchor , Positive, Negative
+  - Want: d(A,P) + margin <= d(A,N) , d means difference
+  - Loss Function
+    - L = max(d(A,P) + margin - d(A,N), 0) , if the differen is less the margin than we don't care how small is it.
+    - J =sum(L^(i)^)
+  - Choosing Triplets hard to learn difference 
+
+- Face Verification and Binary Classification
+  - Turn it into a binary classification: 1 for pair of pictures from same person and 0 for different persons. 
+
+> pre-computation of known samples is a common way to save live computation.
+
+### Neural Style Transfer
+
+- What's Neural Stype Transfer
+  - Combine layers of different CNN into a New CNN
+
+- What are deep ConvNets learning 
+- Neural Stype Transfer Cost Function
+  - J = J_conent(Generated,Content) + J_style(Generated,Style)
+  - randomly initilize G, and update G to minimize L using gradient descent.
+- Content Cost Function
+  - Choose a layer to measure the content similarity of G and C
+  - the shallower the chosen layer, the higher of the similarity. The deeper layer only requires conceptual similarity, like having a dog. 
+- Style Cost Function
+  - Style is defined by the correlation of channels of each layer 
+    - each layer will has a Nc x Nc vector to denote its correlation
+    - sum of correlation of all layers is the stype of the image
+    -  we want minimize "style(G) - style(S)" 
+- 1D and 3D Generaliations
+  - similar to 2D
+
+### Programming
+
+- Session
+  - run一次就是把计算图run到参数对应的结点，返回值就是这个参数本身
+  - generated_image = model['input']，就是把名为input的参数当前值取出来
+  - VGG model只是为了计算 J_style, J_content。相应对只需要计算到那几个选定的层就可以了。 
+- Why Adam update input_image
+  - model = load_vgg_model("pretrained-model/imagenet-vgg-verydeep-19.mat")
+  - print(model) tell us input is a Variable, and optimizer updates Variables.   
+- L2 Distane
+  - square_root(square(v1 -v2))
+
+# LESSION 5: Sequence Models
 
 # 4. Python
 
@@ -574,6 +856,22 @@ loop from 0 to L-1
 sub_set=super_set[1,2:4,2:4,:], shape is [1,2,2,all]
 
 ## Tensorflow
+
+```python
+
+sess = tf.Session()
+
+sess.run(tf.global_variables_initializer())
+
+sess.run(model['input'].assign(input_image))
+
+sess.run(train_step) // or any node in the computation graph
+
+input_image = model['input']
+
+neg_dist = tf.reduce_sum(tf.square(tf.subtract(anchor, negative)), axis=-1) axis=-1 表示降一维，最后一维
+
+```
 
 ### Placeholder and Real Input
 
@@ -617,6 +915,10 @@ Computation Graph is consist of ==Placeholders==, not real data set, which is us
 - Deep enhancement learning
   - 用已有的人为设计的多层NN,训练end2end的NN,评估新NN的性能。
 - Nutual language understanding
+
+### Yann LeCun Interview
+
+Give back to learn. Contribute to the open source.
 
 ## 5.2. 方字就是抽象概念
 
@@ -669,3 +971,54 @@ Computation Graph is consist of ==Placeholders==, not real data set, which is us
 - 识别用户的
 - ...
 - 最后综合识别fakenews，重点是在end2end+enhancement+unsupervised
+
+## Inception: we should go deeper 
+
+- 根本是两个方向
+  - 算法可以自主选择网络
+    - DNN 应该是等价于CNN的，但计算量要大得多。
+    - DNN 通过重复类似CNN的参数值，就可以实现CNN的效果。 
+  - 算法可自动切换权重
+    - 要求算法有类似输入、输出与结构或者有agent来处理输入输出
+    - 像计算机一样，算法的输入输出要独立出来，与核心松耦合   
+
+## 两个想法
+
+输入模拟：大脑的思考好像是模拟音、视输入，如何在NN中应用这种现象呢？
+
+新闻摘要：自动生成真假摘要用来训练识别网络。
+
+## 概念或抽象
+
+抽象主是降维
+
+概念就是多个NN的共识，如CAT
+
+一个NN生成一个概念CAT,然后用GAN再反推出图片，以及对应的概念，让另一个NN识别这个图片得到同样的概念，那就是达成共识，就可以用这个概念沟通了。
+
+## 可解释性
+
+用基因着色类似的方法给NN着色
+
+## 其他 
+
+做个一次消息验证服务：只传输，不在任何中间的任何地方存储，包括日志中
+由来：一些重要信息如账号、密码等，都不应该搜集存储，只在需要的时候获取，如获取密码或CSV码
+
+# 其他知识
+
+## 贝叶斯公式 先验 后验
+
+[参考文献]<https://www.cnblogs.com/hapjin/p/6664545.html>
+
+其实研究的一直是参数theta的可信度问题，在已知信息的条件下，我们要找到在最可信的参数值，即P(theta)最大。然后用这个theta，生成预测模型（类似结果的概率密度函数）来预测后来的值。
+
+- 理想化的方案：
+  - 解出后验概率，然后用后验概率进行预测
+- 我们想知道，根据已知信息，theta最有可能是什么值，即 p=max(P(theta | data))时theta的取值。
+  - 根据贝叶斯公式 P(theta| data) = P(data | theta) P(theta) / P(data)
+  - 解出以上方程，然后求极值就可以了。实际上很验解。于是我们就通过假定先验概率P(theta)服从特定分布，从而简化这个问题。
+  - 最终简化为求似然的极值。
+- 如何求极值
+  - 后验分布中包含了模型参数，使用 点估计(point estimate--the MAP solution) 方法对模型参数进行估计。这方法用到了牛顿法，首先选择一个初始点，然后通过偏导数不断选择下一个点更新初始点，直到偏导数等于0，最终得到极值。当样本的特征是多维的时，就是使用Hessian矩阵来更新了。显然，这是一种不断迭代的思路。因此，该方法需要考虑“收敛性”问题---最终能不能得到最值(极值)？要迭代多少次才能收敛？收敛得快不快？能不能收敛到最优值，可以根据Hessian矩阵的正定性(负定性)来判断，收敛得快不快则需要根据实际情况具体分析了。
+  - 在“点估计”近似方法中，是直接针对模型的参数进行点估计，没有牵涉到 后验分布函数，而Laplace近似方法就是对后验分布函数进行近似。前面提到，我们无法精确求得后验分布函数，那可以找一个 与 后验分布 相似的函数，用它来作为我们的后验分布函数就行了。这称为Laplace approximation.这里的Laplace近似的基本思路就是，先将后验分布表示成Log函数的形式，然后使用泰勒展开对Log函数展开到二阶，由于我们需要最大化后验分布函数，那么一阶泰勒展开项为0，而二阶展开项，则使用高斯分布来近似表示。对于高斯分布而言，需要选择一个合理的均值和方差，具体如何选择的细节就不说了。(我也不知道)
