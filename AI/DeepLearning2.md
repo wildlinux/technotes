@@ -367,7 +367,7 @@ A size that best use the H/W and vectorization alogrithm while takes less time. 
 
 > 任何一种方法采取与否，都得要数据说话。它能带来多少百分比的提升。
 
-### Mismatched training and dev/test set
+### 3.2.2. Mismatched training and dev/test set
 
 - Bias and Variance with mismatched data distributions
     - human {avodable bias} train set {variance} train-dev set {data-mismatch} dev {overfitting to dev} test set
@@ -378,7 +378,7 @@ A size that best use the H/W and vectorization alogrithm while takes less time. 
 
 > train set需要尽量多的数据，就通过读书掌握阅读能力，读什么书到无所谓了；dev/test set要为最终目标设置，如果目标是读懂学术论文，那dev/test就应该都是学术论文。这是说得通的，低层神经元学到的是一些共同的文法处理的知识，可以通过大量阅读得到提高。
 
-### Learning From multiple tasks
+### 3.2.3. Learning From multiple tasks
 
 - Transfer Learning
     - Terminology
@@ -403,7 +403,7 @@ A size that best use the H/W and vectorization alogrithm while takes less time. 
     - Softmax: label is 0 or 1 or 2 or ...
     - Multi-task: label is 0 and 1 and 2 and 3
 
-### End2End Deep Learning
+### 3.2.4. End2End Deep Learning
 
 - Concept
   - example in camera to id
@@ -423,15 +423,15 @@ A size that best use the H/W and vectorization alogrithm while takes less time. 
       - hand-designing actually bring in human experience in the DNN
   - How complex to map X to Y intuitionly? 
 
-# LESSION 4: Convolutional Neural Networks
+# 4. LESSION 4: Convolutional Neural Networks
 
-## WEEK1：Foundations of Convolutional Neural Networks
+## 4.1. WEEK1：Foundations of Convolutional Neural Networks
 
-### Computer Vision
+### 4.1.1. Computer Vision
 
 1000x1000 picture will have a 1 million featuers. If connected with a 1000 hidden unit layer, the W will be a maxtrix with 3 million element, which could unavoidably overfitting to training set, and is costive of computation.
 
-### Edge Detection Example
+### 4.1.2. Edge Detection Example
 
 1 0 -1
 1 0 -1
@@ -439,11 +439,11 @@ A size that best use the H/W and vectorization alogrithm while takes less time. 
 
 the above filter or core, want find the area where the left is bright and right is dark while don't care about the middle.
 
-### More Edge Detection
+### 4.1.3. More Edge Detection
 
 researchers may use other numbers as filter.
 
-### Padding
+### 4.1.4. Padding
 
 - Cons of convolutions
   - shrink of size
@@ -454,18 +454,18 @@ researchers may use other numbers as filter.
 - How
   - pad 0 
 
-### Strided Convolutioins
+### 4.1.5. Strided Convolutioins
 
 move more than on cell at a time.
 
 (n+2padding-filter)/stride+1
 
-### Convolution Over Volumn
+### 4.1.6. Convolution Over Volumn
 
 - if you convolute a RGB image 6x6x3 with a filter 3x3x3, the output will be 4x4
 - if you apply D filters, then the output will be 4x4xD
 
-### One Layer of a Convolutional Network
+### 4.1.7. One Layer of a Convolutional Network
 
 - Pros
   - the same number of filters can be applied to any size of input, while W of a DNN has to changed according to the input dimension.
@@ -486,7 +486,7 @@ move more than on cell at a time.
   - Volumns
     - if having m input images, then each shape will add an additional dimention.
 
-### Simple Convolutional Network Example
+### 4.1.8. Simple Convolutional Network Example
 
 - Trend of hyper parameter chooice
   - shrink size while improve channels  
@@ -495,7 +495,7 @@ move more than on cell at a time.
   - Pooling (POOL)
   - Full Connected (FC) 
 
-### Pooling Layers
+### 4.1.9. Pooling Layers
 
 - why
   - reduce size, fast computation, more robust
@@ -515,18 +515,18 @@ move more than on cell at a time.
 
 > Max pooling layers像是加了一条要求在CNN中，要求前层的网络对重点特征要生成一个较大的数字。相当于明确了==考核指标==。
 
-### CNN Example
+### 4.1.10. CNN Example
 
 - CONV1 POOL1 CONV2 POOL2 FC3 FC4 SOFTMAX5
 - Pooling layer has no parameters to learn that it convetionly is not denote a independent layer
 - Dimentions tend to reduce grandualy with layers
 
-### Why Convolution?
+### 4.1.11. Why Convolution?
 
 - Parameter Sharing
 - Connection Sparsity
 
-### Backpropagation
+### 4.1.12. Backpropagation
 
 - W 中的一些，经过max_pool或avg_pool，影响到cost，其影响如下：
   - Max pool
@@ -549,9 +549,9 @@ move more than on cell at a time.
   - 反向计算过程，就是先计算dL/dA，得到的是一个值。然后(dL/dA) * (dA/dZ)又求得下一个值，再(dL/dA) * (dA/dZ) * (dZ/dW) 之类的值，以此类推。
   - 注意，这里可以把具体的参数想像为一个曲线上的点，每步得到的都是具体的数据，指的是L在这点的斜率。
 
-## WEEK2:
+## 4.2. WEEK2:
 
-### Case Studies
+### 4.2.1. Case Studies
 
 - Classic networks
   - LeNet-5
@@ -593,7 +593,7 @@ move more than on cell at a time.
 
 > 这个有两点想法和我一致，一是要尽量使用同质的网络，通过重复来实现性能增强；二是在中间层产生一个输出，我是想给这个输出更多的用途。
 
-### Practicl Advices for using ConvNets
+### 4.2.2. Practicl Advices for using ConvNets
 
 - Using Open-Source Implementation
   - Github has most of the implementation of algorithms 
@@ -618,7 +618,7 @@ move more than on cell at a time.
     - Ensembling: Train several several nn and average the performance
     - Multi-crops 
 
-### Programming Assignment
+### 4.2.3. Programming Assignment
 
 
 ```python
@@ -686,9 +686,9 @@ SVG(model_to_dot(happyModel).create(prog='dot', format='svg'))
 - vanishing gradients
   - 最后一层计算出的导数值会向前分配到每一层的Weight中，在一层层传递过程中，每层都会乘以WeightMatix(??)，其中的值都是小于1的，这样到第一层时值已经很小了，那参数调整的就很小，学习的过程就很慢。
 
-## WEEK3: Object detection
+## 4.3. WEEK3: Object detection
 
-### Object Localization
+### 4.3.1. Object Localization
 
 - Image classification : Is this a car?
 - Image classification with localization: Is this a car? where is it?
@@ -696,18 +696,18 @@ SVG(model_to_dot(happyModel).create(prog='dot', format='svg'))
 
 All objects need to be labeled in training and proper loss function defined.
 
-### Landmark Detection
+### 4.3.2. Landmark Detection
 
 Add corrodinate label to image, you can have your NN to detect landmarks.
 
-### Object Detection
+### 4.3.3. Object Detection
 
 - Sliding Windows Detection
   - Crop the pictures with a size of a sliding windows and detect object in the cropped sub-pictures and repeat the process.
   - parameters: stride + windows size 
   - computaiton cost is high
   
-### Convolutional Implementation of Sliding Windows
+### 4.3.4. Convolutional Implementation of Sliding Windows
 
 - Turning FC layers into Convolutional layers
   - it's equvilent to FC
@@ -719,7 +719,7 @@ Add corrodinate label to image, you can have your NN to detect landmarks.
   - 由上一条，可以自然推导出，对于深的CNN，POOL layers太多，那可可能会让Stride过大。
   - sliding windows的大小即是原始CNN中的输入大小。
 
-### Bounding Box Predictions 
+### 4.3.5. Bounding Box Predictions
 
 - YOLO: You Only Look Once
   - 把原始图片等分成若干小方格，分别对各小格进行 Object detection and Localization.
@@ -727,13 +727,13 @@ Add corrodinate label to image, you can have your NN to detect landmarks.
   - 对于横跨多个方格的object，计算结果保证只出现在一个格式中（？？） 
   - 合适的选择中间的各层，让结果是满足要求形状的volumn。
 
-### Intersection Over Union 
+### 4.3.6. Intersection Over Union
 
 - It's a defination of 'accuracy' of object detection, to evaluate your detection algorithm.
 - IoU = the size of the intersection / the size of the union, of your predicted rectangle and the precise rectangle. More general, IoU is a measure of overlap between two bounding box. 
 - If IoU >=0.5 ,then conventionally, it is regarded as correct.
 
-### Non-max Suppression
+### 4.3.7. Non-max Suppression
 
 - each objects may be detected multiplely 
 - each detected rectangle has its probability Pc in the output vector
@@ -743,7 +743,7 @@ Add corrodinate label to image, you can have your NN to detect landmarks.
 - pick the next highest and repeat
 - if having multiple objects, you need apply this process independently on each object.
 
-### Anchor Boxes
+### 4.3.8. Anchor Boxes
  
 - 在Non-max Suppression中，重叠多的两个box会被删除一个
 - 那万一有两个object真的重叠呢
@@ -751,11 +751,11 @@ Add corrodinate label to image, you can have your NN to detect landmarks.
 - 对于更多特殊情况，这种算法都处理不了：如三个物体重叠，重叠的物体形状相同等。
 - Archor Boxes与检测到的Box的相似度也用IoU来计算
 
-### YOLO , Put Everything Together
+### 4.3.9. YOLO , Put Everything Together
 
 > 使用越来越复杂的结果向量，也需要越来越复杂的人工标识。
 
-### Programming
+### 4.3.10. Programming
 
 ```python
 
@@ -769,9 +769,9 @@ Add corrodinate label to image, you can have your NN to detect landmarks.
 
 ```
 
-## WEEK4：Special applications: Face recognition & Neural style transfer
+## 4.4. WEEK4：Special applications: Face recognition & Neural style transfer
 
-### Face Recognition
+### 4.4.1. Face Recognition
 
 - Face Verification
   - Input: Image and Id/name
@@ -806,7 +806,7 @@ Add corrodinate label to image, you can have your NN to detect landmarks.
 
 > pre-computation of known samples is a common way to save live computation.
 
-### Neural Style Transfer
+### 4.4.2. Neural Style Transfer
 
 - What's Neural Stype Transfer
   - Combine layers of different CNN into a New CNN
@@ -826,7 +826,7 @@ Add corrodinate label to image, you can have your NN to detect landmarks.
 - 1D and 3D Generaliations
   - similar to 2D
 
-### Programming
+### 4.4.3. Programming
 
 - Session
   - run一次就是把计算图run到参数对应的结点，返回值就是这个参数本身
@@ -838,24 +838,110 @@ Add corrodinate label to image, you can have your NN to detect landmarks.
 - L2 Distane
   - square_root(square(v1 -v2))
 
-# LESSION 5: Sequence Models
+# 5. LESSION 5: Sequence Models
 
-# 4. Python
+## 5.1. Week1: Recurrent Neurl Networks
 
-## Basic 
+### 5.1.1. Notation
 
-### for
+### 5.1.2. RNN Model
+
+## 5.2. Backpropagation
+
+### 5.2.1. Different Types
+
+### 5.2.2. Language Model
+
+P(sentence)
+
+Sentence -> tokenize -> sequence of one-hot vector with <EOS>
+
+### 5.2.3. Sampling novel sequences
+
+- word level models
+- char level models
+
+### 5.2.4. Vanishing gradients with RNNs
+
+### GRU
+
+### LSTM
+
+### Bidirection RNN
+
+
+- 想法：
+  - 像先验概率一样，对于实时的Sequence，我们可以经一个，先验的后缀。
+  - DeepRNN，能不能在深度上用CNN
+
+### Programming
+
+- Building RNN -step by step
+
+- Char level language model
+
+- Jazz generator
+
+
+- 哼歌生成音乐
+
+
+## Week2: 
+
+### Introductiong to Word Embeddings 
+
+- Word Representation
+  - one-hot vector
+  - Featurized representation - word embedding - fit word into a point of the space
+- Using word embeddings
+  - transfer learning
+  - it's less useful for language model and translation, ==why??== 
+- Properties of word embeddings
+  - analogy reasoning
+- Embedding matrix
+
+### Learning Word Embeddings: Word2vec & GloVe
+
+- Learning word embeddings
+  - Language model: a model predict a word given a context, like the preceding four words
+  - context
+    -  last four words
+    -  four words before and four words after
+    -  Last 1 word
+    -  Nearby 1 word
+- Word2Vec
+  - Skip gram
+- Negative Sampling
+    - 其原理其实就是：选择少量信息量大的样本数据优于大量信息量小的样本数据。
+    - 小概率事件信息量大，因为它可以更好的帮助我们修正我们的模型。我们的模型就是根据已发生的事件计算出来的，如果新增加一件重复发生的事，那对现有模型就没有多大影响。 
+    - 没太懂节约计算量那部分
+- GloVe word vectors 
+
+## Application using Word Embeddings
+
+- 例如性别歧视
+  - 先在空间中找到代表性别的坐标轴，例如，矢量（she-he）代表的方向
+  - 然后把没有性别倾向的词都在这个方向中调整值为she+he的中间。
+  - 再调整其他词如mother father完全对称 
+
+- 根据例子，其实Embeddinng-Matrix中的类比可以体现很多现实中的实际情况，虽然看出来充满歧视。
+
+# 6. Python
+
+## 6.1. Basic
+
+### 6.1.1. for
 
 for l in range (L):
     print (" l = " + str(l) + " of " + str(L))
 
 loop from 0 to L-1
 
-### Array
+### 6.1.2. Array
 
 sub_set=super_set[1,2:4,2:4,:], shape is [1,2,2,all]
 
-## Tensorflow
+## 6.2. Tensorflow
 
 ```python
 
@@ -873,29 +959,29 @@ neg_dist = tf.reduce_sum(tf.square(tf.subtract(anchor, negative)), axis=-1) axis
 
 ```
 
-### Placeholder and Real Input
+### 6.2.1. Placeholder and Real Input
 
 Computation Graph is consist of ==Placeholders==, not real data set, which is used only in session.run(feed_dict)
 
-# 5. 一些想法
+# 7. 一些想法
 
-## 5.1. 人物对话中学到的
+## 7.1. 人物对话中学到的
 
-### 5.1.1. Geoffrey Hinton interview
+### 7.1.1. Geoffrey Hinton interview
 
 - Brain is not sympolic
 - Unsupervised learning is more important
 - read some paper then follow your instinct
 - 跟随自己的直觉。跟随自己的直觉当然可能失败，但如果不跟随自己的直觉什么都不会做成。
 
-### 5.1.2. Pieter Abbeel interview
+### 7.1.2. Pieter Abbeel interview
 
 - 算法还不擅长在长时间维度上识别 pattern , 从一天或一生中总结出什么规律。
 - 算法可以识别一些pattern， 但如何使用这些pattern是另一个问题。像人会有一些认识或想法，如何利用。
 - 设计一个生成 增加深度学习算法 的算法。
 - 学习就要自己多多练习
 
-### 5.1.3. Yoshua Bengio interview
+### 7.1.3. Yoshua Bengio interview
 
 - long term dependency 
 - Joint distribution
@@ -904,23 +990,23 @@ Computation Graph is consist of ==Placeholders==, not real data set, which is us
 - Ask good questions and under the underlying principles, **WHY** is more important
 - **ICLR** NIPS ICML have good papers
 
-### 5.1.4. Yuanqing Lin interview
+### 7.1.4. Yuanqing Lin interview
 
-### 5.1.5. Andrej Karpathy interview
+### 7.1.5. Andrej Karpathy interview
 
 - Optimization writes the code, and sometimes it's better than human
 
-### Ruslan Salakhutdinov interview
+### 7.1.6. Ruslan Salakhutdinov interview
 
 - Deep enhancement learning
   - 用已有的人为设计的多层NN,训练end2end的NN,评估新NN的性能。
 - Nutual language understanding
 
-### Yann LeCun Interview
+### 7.1.7. Yann LeCun Interview
 
 Give back to learn. Contribute to the open source.
 
-## 5.2. 方字就是抽象概念
+## 7.2. 方字就是抽象概念
 
 任何现实生活中的色相，都是用文字描述的，文字即概念，没有人可以离开文字思考，文字及抽象。
 
@@ -928,13 +1014,13 @@ Give back to learn. Contribute to the open source.
 
 所以建议一个AI，通过少量观察提取出共同的“模式pattern”，然后给这个pattern起个名字，这就是抽象的过程。然后拿这个pattern去套各种东西，套出新的pattern（原pattern的变形、组合、异化），进行新的抽象（起名），以此扩展。现通过与其他AI或要人类的确认（增强学习：问这是xxx吗？回答：Y/N），从而进一步增强。
 
-## 5.3. 同样的网络不同的权重
+## 7.3. 同样的网络不同的权重
 
 尽量使用同构的网络，这样使用不同的参数值就可以识别不同的东西。
 
 使用多个这样的网络，类似模拟大脑的不同部分。但可以比大脑大的多。
 
-## 5.4. 实现不同功能的互通
+## 7.4. 实现不同功能的互通
 
 音乐转成描述音乐的文字
 
@@ -944,11 +1030,11 @@ Give back to learn. Contribute to the open source.
 
 以上就是类似人类的想像。
 
-## 5.5. 常识
+## 7.5. 常识
 
 人们常拿重力来举例人类的常识。可实则重力是对生活观察的结果的抽象。有了抽象能力就能形成重力的概念，也就是能“想象/生成”提起重物时的图像。
 
-## 5.6. 抽象概念
+## 7.6. 抽象概念
 
 抽象概念即是连接：图片可以连接到文字，文字可以连接到声音，声音可以连接到图片和文字
 
@@ -962,7 +1048,7 @@ Give back to learn. Contribute to the open source.
 
 一个简单的故事 这个世界每个人都想当影帝
 
-## End2End
+## 7.7. End2End
 
 设计一种端到端的检测模型，使用已有的训练好的网络作为master。
 - 识别情绪的
@@ -972,7 +1058,7 @@ Give back to learn. Contribute to the open source.
 - ...
 - 最后综合识别fakenews，重点是在end2end+enhancement+unsupervised
 
-## Inception: we should go deeper 
+## 7.8. Inception: we should go deeper
 
 - 根本是两个方向
   - 算法可以自主选择网络
@@ -982,13 +1068,13 @@ Give back to learn. Contribute to the open source.
     - 要求算法有类似输入、输出与结构或者有agent来处理输入输出
     - 像计算机一样，算法的输入输出要独立出来，与核心松耦合   
 
-## 两个想法
+## 7.9. 两个想法
 
 输入模拟：大脑的思考好像是模拟音、视输入，如何在NN中应用这种现象呢？
 
 新闻摘要：自动生成真假摘要用来训练识别网络。
 
-## 概念或抽象
+## 7.10. 概念或抽象
 
 抽象主是降维
 
@@ -996,20 +1082,29 @@ Give back to learn. Contribute to the open source.
 
 一个NN生成一个概念CAT,然后用GAN再反推出图片，以及对应的概念，让另一个NN识别这个图片得到同样的概念，那就是达成共识，就可以用这个概念沟通了。
 
-## 可解释性
+把文章转成某种二维结构，类似图，然后使用CNN，抽象出类似与style的属性，像计算机画画一样生成
+
+## 7.11. 可解释性
 
 用基因着色类似的方法给NN着色
 
-## 其他 
+## 7.12. 其他
 
 做个一次消息验证服务：只传输，不在任何中间的任何地方存储，包括日志中
 由来：一些重要信息如账号、密码等，都不应该搜集存储，只在需要的时候获取，如获取密码或CSV码
 
-# 其他知识
+# 8. 其他知识
 
-## 贝叶斯公式 先验 后验
+## 8.1. 贝叶斯公式 先验 后验
 
 [参考文献]<https://www.cnblogs.com/hapjin/p/6664545.html>
+
+- 对一个随机事件建模的过程如下：
+  - 1确定分布
+  - 2根据最大似然求出参数。
+  - 3选择参数的先验值
+  - 4根据先验值再校正后验值
+  - 5其中3、4步可以迭代
 
 其实研究的一直是参数theta的可信度问题，在已知信息的条件下，我们要找到在最可信的参数值，即P(theta)最大。然后用这个theta，生成预测模型（类似结果的概率密度函数）来预测后来的值。
 
