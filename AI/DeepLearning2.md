@@ -260,6 +260,7 @@ A size that best use the H/W and vectorization alogrithm while takes less time. 
     - How to get a reasonable mu and sigama in test?
     - Exponential Weight Avarage is used to put together all iteration of mu and sigama to get the final values, which could be used in test and prediction.
 
+> 根据当前输入的均值和方差，按标准正态分布重新计算一下
 > 讲到算法在更新W3时，其实是基于已经给定的W1和W2；结果呢，W1和W2也被更新了，那W3对更新后的W1和W2说不定是正向调整还是反向调整了。那理论上讲，应该先把W1调到最优，再W2，依此类推。反思：这个确实不符合实际，人的理论设计是一层层学习，实际经验是可能学到W4后（写文章后），反调W1（再认识更多的字）。
 
 > NN和人一样，要在多干扰的情况下练习，那抗干扰能力也强。
@@ -865,6 +866,16 @@ Sentence -> tokenize -> sequence of one-hot vector with <EOS>
 
 ### GRU
 
+Gated Recurrent Unit (GRU)
+
+- c: cell, a memory cell,
+  - c^t^ = gate * c_candidate + (1-gate) * c^t-1^ 
+- the update of the memory cell is control by a sigmoid gate value 
+  - gate  = sigmoid(W*[c^t-1^, x^t^]+b)
+  - sigmoid function is in most time close to 0 or 1, that it works like a gate signal, keeping the value or dropping the value.
+- c_candiate is the original RNN a^t^
+  - c_candiate = tanh(W * [c^t-1^, x^t^] + b)
+
 ### LSTM
 
 ### Bidirection RNN
@@ -917,7 +928,7 @@ Sentence -> tokenize -> sequence of one-hot vector with <EOS>
     - 没太懂节约计算量那部分
 - GloVe word vectors 
 
-## Application using Word Embeddings
+### Application using Word Embeddings
 
 - 例如性别歧视
   - 先在空间中找到代表性别的坐标轴，例如，矢量（she-he）代表的方向
@@ -925,6 +936,66 @@ Sentence -> tokenize -> sequence of one-hot vector with <EOS>
   - 再调整其他词如mother father完全对称 
 
 - 根据例子，其实Embeddinng-Matrix中的类比可以体现很多现实中的实际情况，虽然看出来充满歧视。
+
+## Week3: Sequence Model and Attention mechanism
+
+### Various sequence to sequence architectures
+
+- Basic Models
+  - frech, RNN, code, RNN, english
+  - image, CNN, code, RNN, sentence
+  - anything, DNN, code, RNN, sentence
+  - but you don't wont the outputting sentence be generated total randomly
+- Picking the most likely sentence for translation
+  - CONDITIONAL Model
+    - language translation is a CONDITIONAL language model, the input source sentence is the condition. and we want max(p(output sequence|input sequence))
+  - GREEDY SEARCH
+    - in normal language model, we pick up yi by a random sample method on the ai. 
+    - greedy search pick up the word with max value in the vector in every single step, max(yi | x).
+    - but the overall sentence joint probability may not be the highest. 
+-  Beem Search
+  - a beam is a bunch of light, beam_width define the number candidates
+  - greedy search is beam_width=1
+  - if beam_width=3, the model keep 3 copies of the RNN at any given step to keep track of the toppest 3 choice. 
+  - beam search is a appromix search algorithsm or heuristic algorithsm.
+- Refinement of beam search
+  - Length Normalization
+    - $$p_y=p(y^{<t>},y^{<t-1>},...|x^{<...>})= \prod_{t = 0}^{T_y} p(y^{<t>}| x^{<...>})p(y^{<t>},y^{<t-1>},...|x^{<...>}) \tag{1} $$
+      - the more items this equation has, the smaller the p_y ,  that it perfers short sentence obviously. And it may cause computation problem if p_y is to small
+    - $$log(p_y)=\sum_{t = 0}^{T_y} p(y^{<t>}| x^{<...>})p(y^{<t>},y^{<t-1>},...|x^{<...>}) \tag{2}$$
+      - $$log(p_y)$$ can avoid extrame small output
+    - $$ normalized\_beam\_score = log(p_y)/T_y \tag{3}$$ which can reduce the bias on short sentence.  
+- Error analysis in Beam search
+  - To determine where the errors come from, the RNN componet or the beam search component. 
+  - given y come from your trainning set and y' is produced by your model. Then if
+    - p(y) > p(y') means your search algorithsm doesn't include the best answer in its candidates.
+    - p(y)<= p(y') your RNN doesn't  produce the right output, since it the RNN is right then p(y) is the maximum of all possible outputs.
+    - divide the trainning errors into the above to set, you will see what's the main cause and where should you spend your time.
+- Evaluating machine translation - Bleu Score (Bilingua Evaluate Understudy)
+  - Bleu is the single number evaluation metrics for the machine translation vesus the given human translations.
+  - $$p_n =  \sum_{n_{gram}\in y^{'}} ( Count_{y}(n_{gram}) / Count_{y'}(n_{gram}) ) \tag{1}$$ 
+  - $$ Bleu= 1/4  * \sum_{i=1}^{4} p_n \tag{2} $$
+  - 直接解释就是把机器翻译折成例如三个单词一组，这些词组在机器翻译的句子中出现的总次数为分母，在人类翻译的句子出现的总次数为分子，就能算出一个相似度得分。
+- Attention Model Intuition
+  - weight matrix alpha[t,t'], means which part of original sentence should be pay attention to all t activations, when generated the t' output of the target sentence.
+- Attention Model
+  - $$\alpha^{<t,t'>}$$ = amount of attention y^<t>^ should pay to a^<t'>^
+    - y is the target sentence
+    - a is the original activation
+    - alpha is a  scalar
+  - context
+    - $$context^{t}=\sum_{t'}(\alpha^{<t,t'>} * a^{<t'>})$$
+  - How to learn 
+    - attention subject to the previous activation of target sentence and all activation of input sentence. 
+    - sum of attention should be normalized to 1.
+
+### Speech Recognization 
+
+- CTC
+  - the output sequence is much shorter then input audio sequence
+  - use repeat to address this problem
+- Trigger word detection
+  -  how to label the trainning set.
 
 # 6. Python
 
