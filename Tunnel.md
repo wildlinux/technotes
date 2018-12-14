@@ -1,6 +1,20 @@
 
 
 
+## Windows
+
+- install KCPclient from [github](https://github.com/xtaci/kcptun)
+- start it like 
+  - client_windows_amd64 -r "kcpserverIP:port" -l ":20022" -mode fast2
+- Putty enable sock5 proxy, to connect to kcp listening port 20022 as above
+- [manual install switchyomega](https://www.cnet.com/how-to/how-to-install-chrome-extensions-manually/)
+- config Chrome with sock5 proxy
+
+
+##
+
+
+
 ## sock5 based kcp and ssh
 
 ```
